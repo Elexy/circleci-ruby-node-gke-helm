@@ -66,7 +66,7 @@ done
 shift "$((OPTIND-1))" # Shift off the options and optional --.
 
 if [ -z "$GSK" ]; then
-  echo error: no [GCLOUD_SERVICE_KEY] supplied of found in the ENV
+  echo error: no [GCLOUD_SERVICE_KEY] supplied or found in the ENVIRONMENT
   usage
   exit 1
 fi
@@ -78,7 +78,7 @@ OLDDIR=$PWD
 cd $WORKDIR
 echo "working directory: $PWD"
 
-if hash gdate 2>/dev/null; then
+if hash gcloud 2>/dev/null; then
     echo "using existing gcloud command"
 else
     echo "installing gCloud SDK"
@@ -100,8 +100,8 @@ done
 echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
 gcloud config set --installation component_manager/disable_update_check true
 gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
-export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
-export CLOUDSDK_CONTAINER_USE_CLIENT_CERTIFICATE=True
+GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json
+CLOUDSDK_CONTAINER_USE_CLIENT_CERTIFICATE=True
 gcloud config set project $GCLOUD_PROJECT
 gcloud config set account $GCLOUD_SERVICE_ACCOUNT
 gcloud container clusters get-credentials $GCE_CLUSTER --zone $GCE_ZONE --project $GCLOUD_PROJECT
