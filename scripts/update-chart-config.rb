@@ -17,9 +17,9 @@ class Hash
   end
 end
 
-def updateValues (workdir, branch, project, tag)
+def updateValues (repoUrl, repoName, path, workdir, branch, project, tag)
   user = ENV['TRIGGER_USER'] || "update-chart-values.rb"
-  git = Vcs.new(repo: $repoUrl, name: $repoName, workdir: workdir)
+  git = Vcs.new(repo: repoUrl, name: repoName, workdir: workdir)
   #git.fetch
   git.reset_hard
   git.checkout('master')
@@ -29,7 +29,8 @@ def updateValues (workdir, branch, project, tag)
   git.mergemaster
   #git.status
 
-  chartConfig="#{workdir}/#{$repoName}/dgs/values.yaml"
+  chartConfig="#{workdir}/#{repoName}/#{path}/values.yaml"
+  puts chartConfig
   d = YAML::load_file(chartConfig)
   if d.dig(project, 'image')
     oldImg = d[project]['image']
@@ -50,16 +51,18 @@ def updateValues (workdir, branch, project, tag)
 end
 
 opts = Trollop::options do
-  version "test 0.0.1 (c) 2017 Alex Knol, nearForm"
+  version "update-chart-config 0.0.1 (c) 2017 Alex Knol, nearForm"
   banner <<-EOS
-This script will update a values.yml for the DGS chart for you according to the paranmeters:
+This script will update a values.yml for a Helm chart according to the paranmeters:
 
 Usage:
-       test [options] <filenames>+
+       update-chart-config.rb [options] <filenames>+
 where [options] are:
 EOS
 
   opt :repo, "Git repository containing the helm chart",
+        :type => String
+  opt :chartpath, "Path inside the repo where the values.yaml file resides",
         :type => String
   opt :workdir, "Working directory",
         :type => String
@@ -71,18 +74,19 @@ EOS
         :type => String
 end
 Trollop::die :repo, "required" if !opts[:repo]
+Trollop::die :chart path, "required" if !opts[:chartpath]
 Trollop::die :branch, "required" if !opts[:branch]
 Trollop::die :project, "required" if !opts[:project]
 Trollop::die :tag, "required" if !opts[:tag]
 workdir = Dir.tmpdir() if !opts[:workdir]
 
-$repoUrl = opts[:repo]
-$repoName = /\/([\w|-]+)\.git/.match($repoUrl)
+repoUrl = opts[:repo]
+repoName = /\/([\w|-]+)\.git/.match(repoUrl)[1]
 
-Logger.log "projectname: #{reponame}"
+Logger.log "projectname: #{repoName}"
 
 Logger.log "using this working directory: #{workdir}"
 
 Logger.log "updating branch [#{opts[:branch]}] for project [#{opts[:project]}] with tag [#{opts[:tag]}].\n"
 
-updateValues(workdir, opts[:branch], opts[:project], opts[:tag])
+updateValues(repoUrl, repoName, opts[:chartpath], workdir, opts[:branch], opts[:project], opts[:tag])
