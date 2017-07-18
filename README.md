@@ -17,4 +17,4 @@ This command can be used to update a helm chart configuration (values.yaml) that
 
 Example:
 
-```docker run -it -v ~/.ssh:/home/circleci/.ssh c48369a1b0ba ./scripts/update-chart-config.rb -r 'git@github.com:myorg/myrepo.git'  -b someBranch -p projectName -t tag -c chartPath -u 'My Name' -e 'my.name@something.com'```
+```docker run -it -v ~/.ssh:/home/circleci/.ssh elexy/circleci-ruby-node-gke-helm ./scripts/update-chart-config.rb -r 'git@github.com:myorg/myrepo.git'  -b someBranch -p projectName -t tag -c chartPath -u 'My Name' -e 'my.name@something.com'```
