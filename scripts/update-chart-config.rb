@@ -74,7 +74,7 @@ EOS
         :type => String
 end
 Trollop::die :repo, "required" if !opts[:repo]
-Trollop::die :chart path, "required" if !opts[:chartpath]
+Trollop::die :chartpath, "required" if !opts[:chartpath]
 Trollop::die :branch, "required" if !opts[:branch]
 Trollop::die :project, "required" if !opts[:project]
 Trollop::die :tag, "required" if !opts[:tag]

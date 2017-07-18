@@ -9,7 +9,9 @@ ADD ./scripts /home/circleci/scripts
 
 USER root
 RUN ln -s /usr/local/bin/ruby /usr/bin/ruby && \
-    chown circleci:circleci /home/circleci -R
+    chown circleci:circleci /home/circleci -R && \
+    cd /home/circleci/scripts && \
+    bundle install
 
 USER circleci
 
@@ -24,7 +26,4 @@ RUN cd ~ && \
   mv linux-amd64/helm ~/bin/helm
 
 ENV PATH="~/google-cloud-sdk/bin:~/bin::$PATH"
-
-RUN cd ~ && \
-  bundle install --gemfile=scripts/gemfile --path=vendor
 
