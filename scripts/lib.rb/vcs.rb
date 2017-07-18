@@ -25,6 +25,10 @@ class Vcs
     end
   end
 
+  def config(key, value)
+    @g.config(key, value)
+  end
+
   def checkout(branch)
     @g.checkout(branch)
   end
