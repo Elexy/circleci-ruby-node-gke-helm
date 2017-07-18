@@ -3,15 +3,12 @@ FROM circleci/ruby:2-node
 ENV CLOUD_SDK_VERSION 162.0.0
 ENV HELM_VERSION v2.5.0
 
-WORKDIR /home/circleci
-
 ADD ./scripts /src/circleci/scripts
 
 USER root
 RUN ln -s /usr/local/bin/ruby /usr/bin/ruby && \
-    chown circleci:circleci /home/circleci -R && \
     chown circleci:circleci /src/circleci && \
-    cd /src/circleci//scripts && \
+    cd /src/circleci/scripts && \
     bundle install --gemfile=gemfile
 
 USER circleci
