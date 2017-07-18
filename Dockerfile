@@ -11,7 +11,7 @@ USER root
 RUN ln -s /usr/local/bin/ruby /usr/bin/ruby && \
     chown circleci:circleci /home/circleci -R && \
     cd /home/circleci/scripts && \
-    bundle install
+    bundle install --gemfile=gemfile
 
 USER circleci
 
