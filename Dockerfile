@@ -118,5 +118,11 @@ RUN ln -s /usr/local/bin/ruby /usr/bin/ruby && \
     mv linux-amd64/helm /src/ci/bin/helm && \
 		npm install webpack -g
 
+RUN set -x && \
+    VER="17.03.0-ce" && \
+    curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz && \
+    tar -xz -C /tmp -f /tmp/docker-$VER.tgz && \
+    mv /tmp/docker/* /usr/bin
+
 ENV PATH="/src/ci/google-cloud-sdk/bin:/src/ci/bin::$PATH"
 
