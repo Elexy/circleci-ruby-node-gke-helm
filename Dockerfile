@@ -115,7 +115,8 @@ RUN ln -s /usr/local/bin/ruby /usr/bin/ruby && \
     wget https://storage.googleapis.com/kubernetes-helm/helm-$HELM_VERSION-linux-amd64.tar.gz && \
     tar -zxvf helm-$HELM_VERSION-linux-amd64.tar.gz && \
     mkdir /src/ci/bin && \
-    mv linux-amd64/helm /src/ci/bin/helm
+    mv linux-amd64/helm /src/ci/bin/helm && \
+		npm install webpack -g
 
 ENV PATH="/src/ci/google-cloud-sdk/bin:/src/ci/bin::$PATH"
 
