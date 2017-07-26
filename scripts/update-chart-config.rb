@@ -92,5 +92,5 @@ if d.dig(opts[:project], 'image')
   end
 
 else
-  Logger.err "Yaml path '#{project}.image' not found"
+  Logger.err "Yaml path '#{opts[:project]}.image' not found"
 end
