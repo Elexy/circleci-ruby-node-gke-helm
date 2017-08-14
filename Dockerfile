@@ -124,5 +124,9 @@ RUN set -x && \
     tar -xz -C /tmp -f /tmp/docker-$VER.tgz && \
     mv /tmp/docker/* /usr/bin
 
+# install jq to parse json within bash scripts
+RUN curl -o /usr/local/bin/jq http://stedolan.github.io/jq/download/linux64/jq && \
+  chmod +x /usr/local/bin/jq
+
 ENV PATH="/src/ci/google-cloud-sdk/bin:/src/ci/bin::$PATH"
 

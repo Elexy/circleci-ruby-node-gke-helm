@@ -13,14 +13,14 @@ class Vcs
     if repo
       @repoDir = "#{@workdir}/#{name}"
       if File.directory?(@repoDir)
-        @g = Git.open(@repoDir, :log => Logger.new(STDOUT))
+        @g = Git.open(@repoDir)
         # Logger.log "instantiating git for #{@repoDir}"
       else
-        @g = Git.clone(repo, name, { :path => @workdir, :log => Logger.new(STDOUT)})
+        @g = Git.clone(repo, name, { :path => @workdir})
         # Logger.log "Cloned #{repo} in #{@workdir}"
       end
     else
-      @g = Git.open(@workdir, :log => Logger.new(STDOUT))
+      @g = Git.open(@workdir)
       # Logger.log "instantiating git for #{@workdir}"
     end
   end
@@ -31,6 +31,14 @@ class Vcs
 
   def checkout(branch)
     @g.checkout(branch)
+  end
+
+  def branch(branch)
+    @g.branch(branch)
+  end
+
+  def branches
+    @g.branches
   end
 
   def pull(branch)
