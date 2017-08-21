@@ -74,7 +74,7 @@ images = {}
 oldImages = {}
 
 chartConfig="#{workdir}/#{repoName}/#{opts[:chartpath]}/values.yaml"
-Logger.log("Getting DGS image tags from branch: [#{opts[:source]}]")
+Logger.log("Getting image tags from branch: [#{opts[:source]}]")
 d = YAML::load_file(chartConfig)
 
 projects.each do |project|
@@ -94,7 +94,7 @@ end
 
 # puts images.inspect
 
-Logger.log("Updating DGS image tags in branch: [#{opts[:target]}]")
+Logger.log("Updating image tags in branch: [#{opts[:target]}]")
 
 commitMsg = ''
 changed = false
