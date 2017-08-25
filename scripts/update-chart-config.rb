@@ -3,6 +3,7 @@
 require 'trollop'
 require 'yaml'
 require 'tmpdir'
+require 'pathname'
 
 require_relative 'lib.rb/logger'
 require_relative 'lib.rb/vcs'
@@ -73,8 +74,20 @@ git.checkout('master')
 git.pull('master')
 git.checkout(opts[:branch])
 git.pull(opts[:branch])
-git.mergemaster
-#git.status
+
+# run the mergeMaster script in the repo we just cloned
+mergeScript = "/scripts/merge_master.sh"
+repoBase = "#{workdir}/#{repoName}"
+pn = Pathname.new("#{repoBase}")
+puts pn
+if pn.exist?
+  Dir.chdir(repoBase) do
+    OS.runCmd(pn.to_s)
+  end
+else
+  Logger.log "Merge script not found at #{pn}"
+  exit
+end
 
 chartConfig="#{workdir}/#{repoName}/#{opts[:chartpath]}/values.yaml"
 Logger.log("updating chart config at: [#{chartConfig}]")
