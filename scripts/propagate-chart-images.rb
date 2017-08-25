@@ -3,6 +3,7 @@
 require 'trollop'
 require 'yaml'
 require 'tmpdir'
+require 'pathname'
 
 require_relative 'lib.rb/logger'
 require_relative 'lib.rb/vcs'
@@ -20,7 +21,8 @@ end
 opts = Trollop::options do
   version "propagate 0.0.1 (c) 2017 Alex Knol, nearForm"
   banner <<-EOS
-This script will propagate a the image tags from <chartpath>/values.yml from one branch to another:
+This script will propagate the image tags of <repo> from <chartpath>/values.yml from <source> branch to <target> branch:
+Optionally provide Git user and email and Working directory.
 
 Usage:
        propagate.rb [options] <filenames>+
@@ -33,9 +35,9 @@ EOS
         :type => String
   opt :workdir, "Working directory",
         :type => String
-  opt :source, "Environment branch",
+  opt :source, "Origin branch",
         :type => String
-  opt :target, "Project to be updated",
+  opt :target, "Target branch",
         :type => String
   opt :user, "Git user",
         :type => String
@@ -62,9 +64,6 @@ user = ENV['TRIGGER_USER'] || "update-chart-values.rb"
 git = Vcs.new(repo: repoUrl, name: repoName, workdir: workdir)
 git.config('user.name', gitUser)
 git.config('user.email', gitEmail)
-# git.reset_hard
-# git.checkout('master')
-# git.pull('master')
 git.checkout(opts[:source])
 git.pull(opts[:source])
 # git.mergemaster
@@ -87,12 +86,27 @@ end
 
 git.branch(opts[:target]).checkout
 git.branches.each do |branch|
-  if /origin\/#{opts[:target]}/.match(branch.to_s)
+  if /^remotes\/origin\/#{opts[:target]}$/.match(branch.to_s)
+    puts branch.to_s
     git.pull(opts[:target])
   end
 end
 
 # puts images.inspect
+
+# run the mergeMaster script in the repo we just cloned
+mergeScript = "/scripts/merge_master.sh"
+repoBase = "#{workdir}/#{repoName}"
+pn = Pathname.new("#{repoBase}")
+puts pn
+if pn.exist?
+  Dir.chdir(repoBase) do
+    OS.runCmd(pn.to_s)
+  end
+else
+  Logger.log "Merge script not found at #{pn}"
+  exit
+end
 
 Logger.log("Updating image tags in branch: [#{opts[:target]}]")
 
