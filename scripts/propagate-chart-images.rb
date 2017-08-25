@@ -3,6 +3,7 @@
 require 'trollop'
 require 'yaml'
 require 'tmpdir'
+require 'pathname'
 
 require_relative 'lib.rb/logger'
 require_relative 'lib.rb/vcs'
@@ -72,7 +73,7 @@ images = {}
 oldImages = {}
 
 chartConfig="#{workdir}/#{repoName}/#{opts[:chartpath]}/values.yaml"
-Logger.log("Getting DGS image tags from branch: [#{opts[:source]}]")
+Logger.log("Getting image tags from branch: [#{opts[:source]}]")
 d = YAML::load_file(chartConfig)
 
 projects.each do |project|
@@ -93,7 +94,21 @@ end
 
 # puts images.inspect
 
-Logger.log("Updating DGS image tags in branch: [#{opts[:target]}]")
+# run the mergeMaster script in the repo we just cloned
+mergeScript = "/scripts/merge_master.sh"
+repoBase = "#{workdir}/#{repoName}"
+pn = Pathname.new("#{repoBase}")
+puts pn
+if pn.exist?
+  Dir.chdir(repoBase) do
+    OS.runCmd(pn.to_s)
+  end
+else
+  Logger.log "Merge script not found at #{pn}"
+  exit
+end
+
+Logger.log("Updating image tags in branch: [#{opts[:target]}]")
 
 commitMsg = ''
 changed = false
@@ -118,9 +133,5 @@ else
   Logger.log "No real update:\n#{commitMsg}\n--> We will still push to make sure latest state is deployed."
 end
 
-# git.reset_hard
-# git.checkout('master')
-# git.pull('master')
-
-# git.push(opts[:target])
+git.push(opts[:target])
 Logger.log "Push done, this is the end"
