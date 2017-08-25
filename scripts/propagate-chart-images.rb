@@ -20,7 +20,8 @@ end
 opts = Trollop::options do
   version "propagate 0.0.1 (c) 2017 Alex Knol, nearForm"
   banner <<-EOS
-This script will propagate a the image tags from dgs/values.yml from one branch to another:
+This script will propagate the image tags of <repo> from <chartpath>/values.yml from <source> branch to <target> branch:
+Optionally provide Git user and email and Working directory.
 
 Usage:
        propagate.rb [options] <filenames>+
@@ -33,9 +34,9 @@ EOS
         :type => String
   opt :workdir, "Working directory",
         :type => String
-  opt :source, "Environment branch",
+  opt :source, "Origin branch",
         :type => String
-  opt :target, "Project to be updated",
+  opt :target, "Target branch",
         :type => String
   opt :user, "Git user",
         :type => String
