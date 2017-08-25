@@ -62,9 +62,6 @@ user = ENV['TRIGGER_USER'] || "update-chart-values.rb"
 git = Vcs.new(repo: repoUrl, name: repoName, workdir: workdir)
 git.config('user.name', gitUser)
 git.config('user.email', gitEmail)
-# git.reset_hard
-# git.checkout('master')
-# git.pull('master')
 git.checkout(opts[:source])
 git.pull(opts[:source])
 # git.mergemaster
@@ -87,7 +84,8 @@ end
 
 git.branch(opts[:target]).checkout
 git.branches.each do |branch|
-  if /origin\/#{opts[:target]}/.match(branch.to_s)
+  if /^remotes\/origin\/#{opts[:target]}$/.match(branch.to_s)
+    puts branch.to_s
     git.pull(opts[:target])
   end
 end
@@ -119,5 +117,9 @@ else
   Logger.log "No real update:\n#{commitMsg}\n--> We will still push to make sure latest state is deployed."
 end
 
-git.push(opts[:target])
+# git.reset_hard
+# git.checkout('master')
+# git.pull('master')
+
+# git.push(opts[:target])
 Logger.log "Push done, this is the end"
