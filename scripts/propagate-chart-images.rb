@@ -97,7 +97,7 @@ end
 # run the mergeMaster script in the repo we just cloned
 mergeScript = "/scripts/merge_master.sh"
 repoBase = "#{workdir}/#{repoName}"
-pn = Pathname.new("#{repoBase}")
+pn = Pathname.new("#{repoBase}/#{mergeScript}")
 puts pn
 if pn.exist?
   Dir.chdir(repoBase) do
