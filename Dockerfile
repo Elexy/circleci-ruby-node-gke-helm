@@ -19,7 +19,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.11.1
+ENV NODE_VERSION 8.12.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -129,4 +129,3 @@ RUN curl -o /usr/local/bin/jq http://stedolan.github.io/jq/download/linux64/jq &
   chmod +x /usr/local/bin/jq
 
 ENV PATH="/src/ci/google-cloud-sdk/bin:/src/ci/bin::$PATH"
-
