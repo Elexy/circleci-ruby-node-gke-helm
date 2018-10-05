@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/builder-base
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and push the builder image
+          command: |
+            TAG=$CIRCLE_BUILD_NUM
+            IMAGENAME=elexy/ruby-node-gke-helm:$TAG"
+
+            echo $DOCKER_PWD | docker login -u $DOCKER_USER --password-stdin
+
+            echo "Building container image with name: $IMAGENAME"
+            docker build -t $IMAGENAME .
+
+            echo "running [docker push $IMAGENAME]"
+            docker push $IMAGENAME
