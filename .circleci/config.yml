@@ -12,7 +12,7 @@ jobs:
             TAG=$CIRCLE_BUILD_NUM
             IMAGENAME="elexy/ruby-node-gke-helm:$TAG"
 
-            echo $DOCKER_PWD | docker login -u $DOCKER_USER --password-stdin
+            echo $DOCKER_PWD | docker login --username $DOCKER_USER --password-stdin
 
             echo "Building container image with name: $IMAGENAME"
             docker build -t $IMAGENAME .
