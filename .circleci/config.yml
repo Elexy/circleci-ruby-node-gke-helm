@@ -10,10 +10,10 @@ jobs:
           name: Build and push the builder image
           command: |
             TAG=$CIRCLE_BUILD_NUM
-            IMAGENAME="elexy/ruby-node-gke-helm:0.0.$TAG"
+            IMAGENAME="elexy/ruby-node-gke-helm:0.2.$TAG"
 
             docker login --help
-            docker login --username $DOCKER_USER --password $DOCKER_PWD
+            echo $DOCKER_PWD | docker login --username $DOCKER_USER --password-stdin
 
             echo "Building container image with name: $IMAGENAME"
             docker build -t $IMAGENAME .
